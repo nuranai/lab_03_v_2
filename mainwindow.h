@@ -14,6 +14,7 @@
 #include <QFileSystemModel>
 #include <QtCharts/QChartView>
 #include <QMessageBox>
+#include <QPdfWriter>
 #include "chart.h"
 
 
@@ -22,15 +23,23 @@ class MainWindow : public QWidget
     Q_OBJECT
 
 private slots:
-    void changeDirectory();
+    void changeDirectory(); // слот смены директории
+    //слот изменения выбранного файла в таблице
     void fileSelection(const QItemSelection &selected, const QItemSelection &deselected);
+    //слот изменения типа графика
     void changeChartType();
+    //слот печати диаграммы
+    void printChart();
+    //слот смены цвета диаграммы
+    void colorSwap();
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private:
+    // строка хранящая директорию
     QString directoryPath;
+    // строка хранящая путь до файла
     QString filePath;
 
     QFileSystemModel* fileModel;
@@ -55,9 +64,9 @@ private:
     QSplitter* fileSplitter;
     QSplitter* chartSplitter;
 
-    bool isChartActive = false;
+    bool isChartActive = false; //переменная хранящая активность графика
 
-    void exceptionCall(QString title, QString message);
-    void drawChart();
+    void exceptionCall(QString title, QString message); // вызов messagebox
+    void drawChart(); // рисовка графика
 };
 #endif // MAINWINDOW_H

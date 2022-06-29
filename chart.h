@@ -7,23 +7,24 @@
 #include <QtCharts/QPieSlice>
 #include <datastructure.h>
 
-class IChart {
-    QChart* chart = new QChart();
+class IChart { // общий интерфейс
+    QChart* chart = new QChart(); //диаграмма
 public:
-    QChart* getChart() {return chart;}
-    virtual void recreateChart(QList<Data>) = 0;
+    QChart* getChart() {return chart;} //геттер
+    virtual void recreateChart(QList<Data>, bool) = 0; //построение диаграммы
     virtual ~IChart() = default;
+    void clearChart() {chart->removeAllSeries();} //очистка
 };
 
-class BarChart: public IChart {
+class BarChart: public IChart { // диаграмма типа bar
 public:
-    void recreateChart(QList<Data>);
+    void recreateChart(QList<Data>, bool);
     ~BarChart() = default;
 };
 
-class PieChart: public IChart {
+class PieChart: public IChart { // диаграмма типа pie
 public:
-    void recreateChart(QList<Data>);
+    void recreateChart(QList<Data>, bool);
     ~PieChart() = default;
 };
 
