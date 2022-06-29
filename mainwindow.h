@@ -14,7 +14,7 @@
 #include <QFileSystemModel>
 #include <QtCharts/QChartView>
 #include <QMessageBox>
-#include "datastructure.h"
+#include "chart.h"
 
 
 class MainWindow : public QWidget

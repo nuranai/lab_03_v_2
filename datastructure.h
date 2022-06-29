@@ -3,21 +3,33 @@
 
 #include <QList>
 #include <QFile>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QJsonDocument>
+#include <QJsonObject>
 
+struct Data {
+public:
+    QString key;
+    double value;
+};
 
 class IDataStructure {
 public:
-    virtual void getData(QString);
+    virtual QList<Data> getData(QString) = 0;
+    virtual ~IDataStructure() = default;
 };
 
-class SqlDataStructure: IDataStructure {
+class SqlDataStructure: public IDataStructure {
 public:
-    void getData(QString);
+    QList<Data> getData(QString);
+    ~SqlDataStructure() = default;
 };
 
-class JsonDataStructure: IDataStructure {
+class JsonDataStructure: public IDataStructure {
 public:
-    void getData(QString);
+    QList<Data> getData(QString);
+    ~JsonDataStructure() = default;
 };
 
 #endif // DATASTRUCTURE_H
