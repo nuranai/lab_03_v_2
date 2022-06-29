@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "IOCconatiner.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
@@ -65,9 +66,10 @@ MainWindow::MainWindow(QWidget *parent)
     //connections
     connect(btnChangeDirectory, SIGNAL(clicked(bool)), this, SLOT(changeDirectory()));
     connect(
-                tableFileView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
-                this, SLOT(fileSelection(const QItemSelection &, const QItemSelection &))
+                tableFileView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection, const QItemSelection)),
+                this, SLOT(fileSelection(const QItemSelection, const QItemSelection))
                 );
+    connect(comboboxChartType, SIGNAL(currentIndexChanged(int)), this, SLOT(changeChartType()));
 }
 
 void MainWindow::changeDirectory() {
@@ -89,19 +91,52 @@ void MainWindow::fileSelection(const QItemSelection &selected, const QItemSelect
         exceptionCall("Selection Error", "No items has been Selected");
         return;
     }
-    QString filePath = fileModel->filePath(indexes.first());
+    filePath = fileModel->filePath(indexes.first());
     if (filePath.endsWith(".json")) {
-        auto* json = new JsonDataStructure();
-        json->getData(filePath);
+//        auto* json = new JsonDataStructure();
+//        json->getData(filePath);
+        iocContainer.RegisterInstance<IDataStructure, JsonDataStructure>();
     }
     else if (filePath.endsWith(".sqlite")) {
-        auto* sql = new SqlDataStructure();
-        sql->getData(filePath);
+//        auto* sql = new SqlDataStructure();
+//        sql->getData(filePath);
+        iocContainer.RegisterInstance<IDataStructure, SqlDataStructure>();
     }
     else {
         exceptionCall("Wrong file format", "Please select .json or .sqlite file");
         return;
     }
+    if (comboboxChartType->currentText() == "Pie") {
+        iocContainer.RegisterInstance<IChart, PieChart>();
+        isChartActive = true;
+    }
+    else if (comboboxChartType->currentText() == "Bar") {
+        iocContainer.RegisterInstance<IChart, BarChart>();
+        isChartActive = true;
+    }
+    if (isChartActive) {
+        drawChart();
+    }
+}
+
+void MainWindow::changeChartType() {
+    if (comboboxChartType->currentText() == "Pie") {
+        iocContainer.RegisterInstance<IChart, PieChart>();
+    }
+    else if (comboboxChartType->currentText() == "Bar") {
+        iocContainer.RegisterInstance<IChart, BarChart>();
+    }
+    if (isChartActive) {
+        drawChart();
+    }
+}
+
+void MainWindow::drawChart() {
+    auto chart = iocContainer.GetObject<IChart>();
+    auto dataStructure = iocContainer.GetObject<IDataStructure>();
+    QList<Data> items = dataStructure->getData(filePath);
+    chart->recreateChart(items);
+    chartView->setChart(chart->getChart());
 }
 
 void MainWindow::exceptionCall(QString title, QString message) {
