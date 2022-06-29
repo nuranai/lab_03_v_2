@@ -11,19 +11,19 @@ class IChart {
     QChart* chart = new QChart();
 public:
     QChart* getChart() {return chart;}
-    virtual void recreateChart(QList<Data>) = 0;
+    virtual void recreateChart(QList<Data>, bool) = 0;
     virtual ~IChart() = default;
 };
 
 class BarChart: public IChart {
 public:
-    void recreateChart(QList<Data>);
+    void recreateChart(QList<Data>, bool);
     ~BarChart() = default;
 };
 
 class PieChart: public IChart {
 public:
-    void recreateChart(QList<Data>);
+    void recreateChart(QList<Data>, bool);
     ~PieChart() = default;
 };
 

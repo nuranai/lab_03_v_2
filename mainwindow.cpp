@@ -70,6 +70,7 @@ MainWindow::MainWindow(QWidget *parent)
                 this, SLOT(fileSelection(const QItemSelection, const QItemSelection))
                 );
     connect(comboboxChartType, SIGNAL(currentIndexChanged(int)), this, SLOT(changeChartType()));
+    connect(chkbxBlackWhiteChart, SIGNAL(toggled(bool)), this, SLOT(colorSwap()));
 }
 
 void MainWindow::changeDirectory() {
@@ -131,11 +132,19 @@ void MainWindow::changeChartType() {
     }
 }
 
+void MainWindow::colorSwap() {
+    if (isChartActive) drawChart();
+}
+
+void MainWindow::printChart() {
+
+}
+
 void MainWindow::drawChart() {
     auto chart = iocContainer.GetObject<IChart>();
     auto dataStructure = iocContainer.GetObject<IDataStructure>();
     QList<Data> items = dataStructure->getData(filePath);
-    chart->recreateChart(items);
+    chart->recreateChart(items, chkbxBlackWhiteChart->isChecked());
     chartView->setChart(chart->getChart());
 }
 

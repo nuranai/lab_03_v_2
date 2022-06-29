@@ -25,6 +25,8 @@ private slots:
     void changeDirectory();
     void fileSelection(const QItemSelection &selected, const QItemSelection &deselected);
     void changeChartType();
+    void printChart();
+    void colorSwap();
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
