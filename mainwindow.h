@@ -24,13 +24,14 @@ class MainWindow : public QWidget
 private slots:
     void changeDirectory();
     void fileSelection(const QItemSelection &selected, const QItemSelection &deselected);
-
+    void changeChartType();
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private:
     QString directoryPath;
+    QString filePath;
 
     QFileSystemModel* fileModel;
     QTableView* tableFileView;
@@ -54,6 +55,9 @@ private:
     QSplitter* fileSplitter;
     QSplitter* chartSplitter;
 
+    bool isChartActive = false;
+
     void exceptionCall(QString title, QString message);
+    void drawChart();
 };
 #endif // MAINWINDOW_H

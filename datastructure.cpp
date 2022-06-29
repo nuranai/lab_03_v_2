@@ -38,6 +38,7 @@ QList<Data> JsonDataStructure::getData(QString filePath) {
 //            qDebug() << key << value;
             Data temp{key, value};
             result.push_back(temp);
+            i++;
         }
     }
     return result;

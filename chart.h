@@ -8,26 +8,23 @@
 #include <datastructure.h>
 
 class IChart {
+    QChart* chart = new QChart();
 public:
-    virtual QChart* getChart() = 0;
+    QChart* getChart() {return chart;}
     virtual void recreateChart(QList<Data>) = 0;
-    virtual ~IChart() = default;
+    virtual ~IChart() = 0;
 };
 
 class BarChart: public IChart {
-    QChart* chart = new QChart();
 public:
-    QChart* getChart() {return chart;}
     void recreateChart(QList<Data>);
-    ~BarChart() {delete chart;}
+    ~BarChart() = 0;
 };
 
 class PieChart: public IChart {
-    QChart* chart = new QChart();
 public:
-    QChart* getChart() {return chart;}
     void recreateChart(QList<Data>);
-    ~PieChart() {delete chart;}
+    ~PieChart() = 0;
 };
 
 #endif // CHART_H

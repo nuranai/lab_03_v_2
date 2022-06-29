@@ -69,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent)
                 tableFileView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection, const QItemSelection)),
                 this, SLOT(fileSelection(const QItemSelection, const QItemSelection))
                 );
+    connect(comboboxChartType, SIGNAL(currentIndexChanged(int)), this, SLOT(changeChartType()));
 }
 
 void MainWindow::changeDirectory() {
@@ -90,7 +91,7 @@ void MainWindow::fileSelection(const QItemSelection &selected, const QItemSelect
         exceptionCall("Selection Error", "No items has been Selected");
         return;
     }
-    QString filePath = fileModel->filePath(indexes.first());
+    filePath = fileModel->filePath(indexes.first());
     if (filePath.endsWith(".json")) {
 //        auto* json = new JsonDataStructure();
 //        json->getData(filePath);
@@ -105,7 +106,32 @@ void MainWindow::fileSelection(const QItemSelection &selected, const QItemSelect
         exceptionCall("Wrong file format", "Please select .json or .sqlite file");
         return;
     }
-    iocContainer.RegisterInstance<IChart, BarChart>();
+    if (comboboxChartType->currentText() == "Pie") {
+        iocContainer.RegisterInstance<IChart, PieChart>();
+        isChartActive = true;
+    }
+    else if (comboboxChartType->currentText() == "Bar") {
+        iocContainer.RegisterInstance<IChart, BarChart>();
+        isChartActive = true;
+    }
+    if (isChartActive) {
+        drawChart();
+    }
+}
+
+void MainWindow::changeChartType() {
+    if (comboboxChartType->currentText() == "Pie") {
+        iocContainer.RegisterInstance<IChart, PieChart>();
+    }
+    else if (comboboxChartType->currentText() == "Bar") {
+        iocContainer.RegisterInstance<IChart, BarChart>();
+    }
+    if (isChartActive) {
+        drawChart();
+    }
+}
+
+void MainWindow::drawChart() {
     auto chart = iocContainer.GetObject<IChart>();
     auto dataStructure = iocContainer.GetObject<IDataStructure>();
     QList<Data> items = dataStructure->getData(filePath);
