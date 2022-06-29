@@ -1,10 +1,14 @@
 #include "chart.h"
 
 void BarChart::recreateChart(QList<Data> list, bool isBWEnabled) {
+    // полученные данные из списка
     Data data;
+    // диаграмма
     QChart* chart = getChart();
-    chart->setTitle("asd");
+    // заголовок
+    chart->setTitle("BarChart");
     QBarSeries *series = new QBarSeries(chart);
+    // количество данных
     int length = list.count();
     for (int i = 0; i < length; i++) {
         QBarSet* set = new QBarSet(list.at(i).key);
@@ -18,16 +22,22 @@ void BarChart::recreateChart(QList<Data> list, bool isBWEnabled) {
         }
         series->append(set);
     }
+    // очищаем всю серии chart
     chart->removeAllSeries();
+    // задаем новые
     chart->addSeries(series);
     chart->createDefaultAxes();
 }
 
 void PieChart::recreateChart(QList<Data> list, bool isBWEnabled) {
+    // полученные данные из списка
     Data data;
+    // диаграмма
     QChart* chart = getChart();
-    chart->setTitle("bamp");
+    // заголовок
+    chart->setTitle("PieChart");
     QPieSeries * series = new QPieSeries(chart);
+    // количество данных
     int length = list.count();
     for (int i = 0; i < length; i++) {
         QPieSlice* slice = series->append(list.at(i).key, list.at(i).value);
@@ -39,6 +49,8 @@ void PieChart::recreateChart(QList<Data> list, bool isBWEnabled) {
             slice->setBrush(QColor(bw, bw, bw));
         }
     }
+    // очищаем всю серии chart
     chart->removeAllSeries();
+    // задаем новые
     chart->addSeries(series);
 }
